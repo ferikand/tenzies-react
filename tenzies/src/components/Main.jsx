@@ -24,16 +24,20 @@ export default function Main() {
   }
 
   function rollDice() {
-    setDice((oldDie) =>
-      oldDie.map((die) =>
-        die.isHeld === false
-          ? {
-              ...die,
-              value: Math.ceil(Math.random() * 6),
-            }
-          : die
+    if (!gameWon) {
+      setDice((oldDie) =>
+        oldDie.map((die) =>
+          die.isHeld === false
+            ? {
+                ...die,
+                value: Math.ceil(Math.random() * 6),
+              }
+            : die
+        )
       )
-    )
+    } else {
+      setDice(generateAllNewDice())
+    }
   }
 
   function holdDice(dice) {
@@ -68,6 +72,11 @@ export default function Main() {
   return (
     <main>
       {gameWon && <Confetti />}
+      <div aria-live="polite" className="sr-only">
+        {gameWon && (
+          <p>Congratulations! You won! Press "New Game" to start again</p>
+        )}
+      </div>
       <h1 className="title">Tenzies</h1>
       <p className="instructions">
         Roll until all dice are the same. Click each die to freeze it at its
